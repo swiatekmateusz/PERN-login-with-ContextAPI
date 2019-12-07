@@ -1,0 +1,24 @@
+{
+  "name": "logincontextapijwt",
+  "version": "1.0.0",
+  "description": "Node login system with react,jwt,exprees and contextAPI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon sever.js"
+  },
+  "author": "Mateusz Świątek",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.2.4",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.4.0",
+    "pg": "^7.14.0"
+  }
+}
