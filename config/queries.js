@@ -10,6 +10,7 @@ const pool = new Pool({
 const runQuery = async (query, res, listOfArgs) => {
   try {
     const resFromDB = await pool.query(query, [...listOfArgs])
+    if (resFromDB.rows.length === 1) return resFromDB.rows[0]
     return resFromDB.rows
   } catch (error) {
     return res.status(404).json({ msg: error.message })

@@ -4,10 +4,9 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const transporter = require('../config/mail')
 const auth = require('../middleware/auth')
 
-// @route GET  api/auth
+// @route POST api/auth
 // @desc  Login user and get token
 // @access Public
 router.post('/', [
@@ -22,10 +21,9 @@ router.post('/', [
   const { email, password } = req.body
 
   try {
-    const query1 = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
-    const res1 = await runQuery(query1, res, [email])
-    const user = res1[0]
     // Check if user exists
+    const query1 = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
+    const user = await runQuery(query1, res, [email])
     if (!user) {
       return res.send("User with that email doesn't exist")
     }
@@ -57,13 +55,24 @@ router.post('/', [
       })
   } catch (error) {
     console.log(error);
-    res.send("Server error")
+    res.status(500).send("Server error")
   }
 })
 
-
+// @route GET  api/auth
+// @desc  Login user and get token
+// @access Public
 router.get('/', auth, async (req, res) => {
-  console.log(req.user);
+  try {
+    // Get info about user included in token
+    const query = "SELECT email,name,date FROM users WHERE id = $1"
+    const user = await runQuery(query, res, [req.user.id])
+    user.id = req.user.id
+    res.json(user)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error")
+  }
 })
 
 module.exports = router

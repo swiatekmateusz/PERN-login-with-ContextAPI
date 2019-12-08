@@ -24,8 +24,8 @@ router.post('/', [
   try {
     // Check if email is used
     const queryIsEmailUsed = "SELECT * FROM users WHERE email = $1"
-    const res1 = await runQuery(queryIsEmailUsed, res, [email])
-    if (res1.length > 0) {
+    const user = await runQuery(queryIsEmailUsed, res, [email])
+    if (user) {
       return res.status(400).json({ msg: "This email have been used arleady" })
     }
 
