@@ -6,10 +6,6 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 const transporter = require('../config/mail')
 
-//TO DO
-//Argon zamiast bcrypt
-// /confirm route
-
 // @route POST  api/users
 // @desc  Register a user
 // @access Public
@@ -40,7 +36,6 @@ router.post('/', [
     //Create email token
     const emailToken = jwt.sign({ email }, config.get('emailSecret'), { expiresIn: '1h' })
 
-
     // Insert new user
     const date = Math.floor(Date.now() / 1000)
     const queryInsertUser = `INSERT INTO users (name,email,password,date) VALUES ($1,$2,$3,to_timestamp($4))`
@@ -66,16 +61,18 @@ router.post('/', [
 // @access Public
 router.get('/confirm/:token', async (req, res) => {
   const token = req.params.token
+  // Verify token
   jwt.verify(token, config.get('emailSecret'), async (error, decoded) => {
+    // Check if errrs
     if (error !== null) return res.status(401).json({ error })
+    // If no error
     if (decoded) {
       const { email } = decoded
-
       const query = "UPDATE users SET emailconfirmed = 'true' WHERE email = $1"
-
+      //Update confirmation to true for email from token
       const response = await runQuery(query, res, [email])
         .then(() => {
-          res.send("Email confirmed")
+          res.redirect('/api/confirm/')
         }).catch(err => {
           res.status(404).json(err)
         })
