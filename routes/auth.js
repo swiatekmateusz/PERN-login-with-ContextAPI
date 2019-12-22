@@ -24,14 +24,14 @@ router.post('/', [
     // Check if user exists
     const query1 = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
     const user = await runQuery(query1, res, [email])
-    if (!user) {
-      return res.send("User with that email doesn't exist")
+    if (user.length === 0) {
+      return res.status(400).send("User with that email doesn't exist")
     }
 
     const { id, emailconfirmed, password: hashPassword } = user
     //Check if user confirmed email
     if (!emailconfirmed) {
-      return res.send("You have to confirm your email!")
+      return res.status(400).send("You have to confirm your email!")
     }
 
     // Check corretection of password
@@ -47,7 +47,7 @@ router.post('/', [
         id
       }
     }
-    jwt.sign(payload, config.get('jwtSecret'),
+    jwt.sign(payload, config.get('jwtSecrets.jwtSecret'),
       { expiresIn: 360000 },
       (err, token) => {
         if (err) throw err
@@ -64,11 +64,13 @@ router.post('/', [
 // @access Public
 router.get('/', auth, async (req, res) => {
   try {
-    // Get info about user included in token
-    const query = "SELECT email,name,date FROM users WHERE id = $1"
-    const user = await runQuery(query, res, [req.user.id])
-    user.id = req.user.id
-    res.json(user)
+    if (req.user) {
+      // Get info about user included in token
+      const query = "SELECT email,name,date FROM users WHERE id = $1"
+      const user = await runQuery(query, res, [req.user.id])
+      user.id = req.user.id
+      res.json(user)
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error")
