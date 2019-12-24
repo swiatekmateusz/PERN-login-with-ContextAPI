@@ -84,6 +84,9 @@ router.get('/confirm/:token', async (req, res) => {
       jwt.verify(token, config.get('jwtSecrets.emailSecret'), async (error, decoded) => {
         // Check if errrs
         if (error !== null) {
+          // USUWANIE Z BAZY linku dajacego error
+          const deleteActiveEmail = "DELETE FROM links WHERE token = $1 AND typeoflink = 'activeemail'"
+          const deleteRow = await runQuery(deleteActiveEmail, res, [tpoken])
           if (error.message === 'jwt expired') return res.status(401).send('Link expired')
           if (error.message === 'invalid token' || error.message === 'jwt malformed') return res.status(401).send('Invalid link')
           else return res.status(401).json({ error })

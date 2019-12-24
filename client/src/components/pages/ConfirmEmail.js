@@ -14,7 +14,6 @@ const ConfirmEmail = props => {
         .catch(err => {
           setMsg(`${err.response.data}. Try login to resend active link`)
         })
-      // usuwanie z bazy tego linku
       setTimeout(() => {
         props.history.push('/login')
       }, 5000)
