@@ -7,6 +7,7 @@ export default (state, action) => {
         token: action.payload.token,
         isAuthenticated: true,
         loading: false,
+        error: null,
       }
     case "SUCCESS_LOADUSER":
       return {
@@ -14,6 +15,7 @@ export default (state, action) => {
         user: action.payload,
         isAuthenticated: true,
         loading: false,
+        error: null,
       }
     case "ERROR_REGISTER":
     case "ERROR_LOGIN":
@@ -26,6 +28,7 @@ export default (state, action) => {
         token: null,
         loading: false,
         user: null,
+        error: action.payload,
       }
     case "END_LOADING":
       return {
@@ -36,6 +39,21 @@ export default (state, action) => {
       return {
         ...state,
         loading: true,
+      }
+    case "CLEAR_ERROR":
+      return {
+        ...state,
+        error: null,
+      }
+    case "SET_RESENDEMAIL":
+      return {
+        ...state,
+        emailToResend: action.payload,
+      }
+    case "REMOVE_RESENDEMAIL":
+      return {
+        ...state,
+        emailToResend: null,
       }
     default:
       return {

@@ -12,6 +12,7 @@ export const AuthState = props => {
     user: null,
     error: null,
     loading: true,
+    emailToResend: null,
   }
 
   const [state, dispatch] = useReducer(authReducer, initialState)
@@ -22,14 +23,21 @@ export const AuthState = props => {
     }
     try {
       delete user.password2
-      await axios.post('/api/users', user, config)
-      console.log("Success now, cofirm ur mail");
+      const res = await axios.post('/api/users', user, config)
+      console.log(res);
       // Alert
       //dispatch(type:"SUCCES_REGISTER")
     } catch (error) {
-      console.log(error.response.data.msg);
-      // Alert
-      dispatch({ type: "ERROR_REGISTER" })
+      if (error.response.data.msg) {
+        dispatch({ type: "ERROR_REGISTER", payload: error.response.data.msg })
+      } else if (error.response.data.errors.length > 0) {
+        error.response.data.errors.forEach(error => {
+          console.log(error);
+          dispatch({ type: "ERROR_REGISTER", payload: error.msg })
+          dispatch({ type: "CLEAR_ERROR" })
+        })
+      }
+      console.log(error.response.data);
     }
   }
 
@@ -39,13 +47,17 @@ export const AuthState = props => {
     }
     try {
       const response = await axios.post('/api/auth', user, config)
-      console.log(response);
       dispatch({ type: "SUCCESS_LOGIN", payload: response.data })
       loadUser()
     } catch (error) {
       console.log(error.response.data);
-      // Alert
-      dispatch({ type: "ERROR_LOGIN" })
+      if (error.response.data === "You have to confirm your email!") {
+        dispatch({ type: "SET_RESENDEMAIL", payload: user.email })
+      } else {
+        dispatch({ type: "REMOVE_RESENDEMAIL" })
+      }
+      dispatch({ type: "ERROR_LOGIN", payload: error.response.data })
+      dispatch({ type: "CLEAR_ERROR" })
     }
   }
 
@@ -56,20 +68,36 @@ export const AuthState = props => {
     }
     try {
       const response = await axios.get('/api/auth')
-      console.log(response);
       dispatch({ type: "SUCCESS_LOADUSER", payload: response.data })
     } catch (error) {
       console.log(error.response.data.msg);
       // Alert
-      dispatch({ type: "ERROR_LOADUSER" })
+      dispatch({ type: "ERROR_LOADUSER", payload: error.response.data })
+      dispatch({ type: "CLEAR_ERROR" })
     }
   }
 
   const logout = () => {
     dispatch({ type: "LOGOUT" })
   }
+
   const endLoading = () => {
     dispatch({ type: "END_LOADING" })
+  }
+
+  const resendEmail = () => {
+    console.log(state.emailToResend);
+    try {
+      // uderzenie do API i alert ze pomyslnie resend email, a nasepnie clear przycisku
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: "ERROR_LOGIN", payload: error.response.data })
+      dispatch({ type: "CLEAR_ERROR" })
+    }
+  }
+
+  const clearResendEmail = () => {
+    dispatch({ type: "REMOVE_RESENDEMAIL" })
   }
 
   return (
@@ -79,11 +107,14 @@ export const AuthState = props => {
       user: state.user,
       error: state.error,
       loading: state.loading,
+      emailToResend: state.emailToResend,
       registerUser,
       loginUser,
       loadUser,
       logout,
-      endLoading
+      endLoading,
+      resendEmail,
+      clearResendEmail
     }}>
       {props.children}
     </AuthContext.Provider>

@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/authContext/AuthContext'
+import { AlertContext } from '../../context/alertContext/AlertContext'
 
 const Register = props => {
   const [user, setUser] = useState({
@@ -13,14 +14,23 @@ const Register = props => {
   const authContext = useContext(AuthContext);
   const { isAuthenticated, registerUser, error } = authContext
 
+  const alertContext = useContext(AlertContext);
+  const { addAlert, clearAlerts } = alertContext
+
   useEffect(() => {
+    if (error) {
+      addAlert(error, "danger")
+    }
     if (isAuthenticated) {
       props.history.push('/')
     }
-    if (error) {
-      //set alert
-    }
+    // eslint-disable-next-line
   }, [props.history, isAuthenticated, error]);
+
+  useEffect(() => {
+    clearAlerts()
+    // eslint-disable-next-line
+  }, [props.history]);
 
   const handleInput = e => setUser({
     ...user,
@@ -29,8 +39,9 @@ const Register = props => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    clearAlerts()
     if (password !== password2) {
-      console.log("passwords doesnt match");
+      addAlert("passwords doesnt match", "danger")
     } else {
       registerUser(user)
       setUser({
@@ -39,6 +50,7 @@ const Register = props => {
         password: '',
         password2: '',
       })
+      addAlert("Success, now confirm your email", "Success")
     }
   }
 

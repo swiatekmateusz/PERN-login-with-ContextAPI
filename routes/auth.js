@@ -29,10 +29,6 @@ router.post('/', [
     }
 
     const { id, emailconfirmed, password: hashPassword } = user
-    //Check if user confirmed email
-    if (!emailconfirmed) {
-      return res.status(400).send("You have to confirm your email!")
-    }
 
     // Check corretection of password
     const isMatch = await bcrypt.compare(password, hashPassword)
@@ -40,6 +36,12 @@ router.post('/', [
     if (!isMatch) {
       return res.status(400).send("Invalid password")
     }
+
+    //Check if user confirmed email
+    if (!emailconfirmed) {
+      return res.status(400).send("You have to confirm your email!")
+    }
+
 
     // Send token
     const payload = {

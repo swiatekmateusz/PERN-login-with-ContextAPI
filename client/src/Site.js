@@ -7,8 +7,9 @@ import Nav from './components/layout/Nav'
 import { AuthContext } from './context/authContext/AuthContext'
 import PrivateRoute from './components/route/PrivateRoute'
 import ConfirmEmail from './components/pages/ConfirmEmail'
+import Alerts from './components/layout/Alerts'
 
-const Site = () => {
+const Site = props => {
   const authContext = useContext(AuthContext);
   const { loadUser, endLoading, loading } = authContext
   useEffect(() => {
@@ -19,12 +20,14 @@ const Site = () => {
     }
     // eslint-disable-next-line
   }, []);
+
   return (
     <BrowserRouter>
       {!loading ? (
         <Fragment>
           <Nav />
           <div className="container">
+            <Alerts />
             <Switch>
               <PrivateRoute exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
