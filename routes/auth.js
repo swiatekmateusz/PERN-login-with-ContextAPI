@@ -23,7 +23,9 @@ router.post('/', [
   try {
     // Check if user exists
     const query1 = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
-    const user = await runQuery(query1, res, [email])
+    const user = await runQuery(query1, [email])
+    if (user instanceof Error) throw new Error(user)
+
     if (user.length === 0) {
       return res.status(400).send("User with that email doesn't exist")
     }
@@ -62,14 +64,16 @@ router.post('/', [
 })
 
 // @route GET  api/auth
-// @desc  Login user and get token
+// @desc  Get all user info
 // @access Public
 router.get('/', auth, async (req, res) => {
   try {
     if (req.user) {
       // Get info about user included in token
       const query = "SELECT email,name,date FROM users WHERE id = $1"
-      const user = await runQuery(query, res, [req.user.id])
+      const user = await runQuery(query, [req.user.id])
+      if (user instanceof Error) throw new Error(user)
+
       user.id = req.user.id
       res.json(user)
     }

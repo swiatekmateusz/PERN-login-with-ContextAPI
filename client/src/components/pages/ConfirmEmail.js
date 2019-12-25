@@ -7,7 +7,8 @@ const ConfirmEmail = props => {
   const token = props.match.params.token
   useEffect(() => {
     const confirmEmail = async () => {
-      const res = await axios.get(`/api/users/confirm/${token}`)
+      // eslint-disable-next-line
+      const res = await axios.get(`/api/email/confirm/${token}`)
         .then(res => {
           setMsg(res.data)
         })
@@ -19,6 +20,7 @@ const ConfirmEmail = props => {
       }, 5000)
     }
     confirmEmail()
+    // eslint-disable-next-line
   }, []);
   return (
     <div>{msg}</div>

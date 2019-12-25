@@ -9,13 +9,15 @@ const pool = new Pool({
   port: config.get('postgresConfig.port'),
 })
 
-const runQuery = async (query, res, listOfArgs) => {
+const runQuery = async (query, listOfArgs) => {
   try {
-    const resFromDB = await pool.query(query, [...listOfArgs])
+    let resFromDB = ''
+    if (!listOfArgs) resFromDB = await pool.query(query)
+    else resFromDB = await pool.query(query, [...listOfArgs])
     if (resFromDB.rows.length === 1) return resFromDB.rows[0]
     return resFromDB.rows
   } catch (error) {
-    return res.status(404).json({ msg: error.message })
+    return new Error(error.message)
   }
 
 }

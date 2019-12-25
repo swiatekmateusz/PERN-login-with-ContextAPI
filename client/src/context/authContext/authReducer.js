@@ -40,6 +40,12 @@ export default (state, action) => {
         ...state,
         loading: true,
       }
+    case "ALERT":
+      return {
+        ...state,
+        error: action.payload,
+      }
+    case "CLEAR_ALERT":
     case "CLEAR_ERROR":
       return {
         ...state,

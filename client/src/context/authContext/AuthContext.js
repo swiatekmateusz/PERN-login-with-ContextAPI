@@ -23,21 +23,17 @@ export const AuthState = props => {
     }
     try {
       delete user.password2
+      // eslint-disable-next-line
       const res = await axios.post('/api/users', user, config)
-      console.log(res);
-      // Alert
-      //dispatch(type:"SUCCES_REGISTER")
     } catch (error) {
       if (error.response.data.msg) {
         dispatch({ type: "ERROR_REGISTER", payload: error.response.data.msg })
       } else if (error.response.data.errors.length > 0) {
         error.response.data.errors.forEach(error => {
-          console.log(error);
           dispatch({ type: "ERROR_REGISTER", payload: error.msg })
           dispatch({ type: "CLEAR_ERROR" })
         })
       }
-      console.log(error.response.data);
     }
   }
 
@@ -71,7 +67,6 @@ export const AuthState = props => {
       dispatch({ type: "SUCCESS_LOADUSER", payload: response.data })
     } catch (error) {
       console.log(error.response.data.msg);
-      // Alert
       dispatch({ type: "ERROR_LOADUSER", payload: error.response.data })
       dispatch({ type: "CLEAR_ERROR" })
     }
@@ -85,10 +80,12 @@ export const AuthState = props => {
     dispatch({ type: "END_LOADING" })
   }
 
-  const resendEmail = () => {
-    console.log(state.emailToResend);
+  const resendEmail = async () => {
     try {
       // uderzenie do API i alert ze pomyslnie resend email, a nasepnie clear przycisku
+      const get = await axios.get(`/api/email/resend/${state.emailToResend}`)
+      dispatch({ type: "ALERT", payload: get.data })
+      dispatch({ type: "CLEAR_ALERT" })
     } catch (error) {
       console.log(error);
       dispatch({ type: "ERROR_LOGIN", payload: error.response.data })

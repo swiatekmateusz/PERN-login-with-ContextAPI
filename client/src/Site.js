@@ -9,7 +9,7 @@ import PrivateRoute from './components/route/PrivateRoute'
 import ConfirmEmail from './components/pages/ConfirmEmail'
 import Alerts from './components/layout/Alerts'
 
-const Site = props => {
+const Site = () => {
   const authContext = useContext(AuthContext);
   const { loadUser, endLoading, loading } = authContext
   useEffect(() => {

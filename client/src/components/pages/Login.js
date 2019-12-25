@@ -46,6 +46,11 @@ const Login = props => {
     })
   }
 
+  const resend = () => {
+    resendEmail()
+    clearResendEmail()
+  }
+
   return (
     <Fragment>
       <h1>Login</h1>
@@ -54,7 +59,7 @@ const Login = props => {
         <div><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
         <input type="submit" />
       </form>
-      {emailToResend !== null ? <button onClick={resendEmail}>Resend email</button> : null}
+      {emailToResend !== null ? <button onClick={resend}>Resend email</button> : null}
     </Fragment>
   )
 };
