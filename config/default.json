@@ -2,7 +2,8 @@
   "SUPPRESS_NO_CONFIG_WARNING": true,
   "jwtSecrets": {
     "emailSecret": "sdfasf",
-    "jwtSecret": "xdfdsf"
+    "jwtSecret": "xdfdsf",
+    "passwordSecret": "passwd"
   },
   "emailConfig": {
     "email": "mailerbot735@gmail.com",

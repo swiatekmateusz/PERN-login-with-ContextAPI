@@ -27,11 +27,6 @@ const Register = props => {
     // eslint-disable-next-line
   }, [props.history, isAuthenticated, error]);
 
-  useEffect(() => {
-    clearAlerts()
-    // eslint-disable-next-line
-  }, [props.history]);
-
   const handleInput = e => setUser({
     ...user,
     [e.target.name]: e.target.value
@@ -50,7 +45,6 @@ const Register = props => {
         password: '',
         password2: '',
       })
-      addAlert("Success, now confirm your email", "Success")
     }
   }
 

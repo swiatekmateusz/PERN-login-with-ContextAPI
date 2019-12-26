@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/authContext/AuthContext'
 import { AlertContext } from '../../context/alertContext/AlertContext'
+import { Link } from 'react-router-dom'
 
 const Login = props => {
   const [user, setUser] = useState({
@@ -26,7 +27,6 @@ const Login = props => {
   }, [props.history, isAuthenticated, error]);
 
   useEffect(() => {
-    clearAlerts()
     clearResendEmail()
     // eslint-disable-next-line
   }, [props.history]);
@@ -60,6 +60,7 @@ const Login = props => {
         <input type="submit" />
       </form>
       {emailToResend !== null ? <button onClick={resend}>Resend email</button> : null}
+      <Link to="/reset">Did you forget password?</Link>
     </Fragment>
   )
 };

@@ -46,22 +46,18 @@ router.post('/', [
     const queryInsertUser = "INSERT INTO users (name,email,password,date) VALUES ($1,$2,$3,to_timestamp($4))"
     const addUser = await runQuery(queryInsertUser, [name, email, hashPassword, date])
     if (addUser instanceof Error) throw new Error(addUser)
-      .then(() => {
-        transporter.sendMail({
-          to: email,
-          subject: 'Confirm email',
-          html: `http://localhost:3000/confirm/${emailToken}`
-        })
-        res.send("Success register")
-      }).catch(err => {
-        console.log(err);
-        res.status(500).send("Server erorr")
-      })
+
+    await transporter.sendMail({
+      to: email,
+      subject: 'Confirm email',
+      html: `http://localhost:3000/confirm/${emailToken}`
+    })
 
     const queryInsertLink = `INSERT INTO links (email,token,typeoflink) VALUES ($1,$2,$3)`
     const addLink = await runQuery(queryInsertLink, [email, emailToken, "activeemail"])
     if (addLink instanceof Error) throw new Error(addLink)
 
+    res.send("Success register")
   } catch (err) {
     console.log(err);
     res.status(500).send("Server erorr")

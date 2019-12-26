@@ -30,7 +30,7 @@ router.get('/resend/:email', async (req, res) => {
 
       transporter.sendMail({
         to: email,
-        subject: 'Confirm email',
+        subject: 'Resended: Confirm email',
         html: `http://localhost:3000/confirm/${token}`
       })
       res.send("Link resend")
@@ -60,7 +60,7 @@ router.get('/confirm/:token', async (req, res) => {
         if (error !== null) {
           // USUWANIE Z BAZY linku dajacego error
           const deleteActiveEmail = "DELETE FROM links WHERE token = $1 AND typeoflink = 'activeemail'"
-          const deleteRow = await runQuery(deleteActiveEmail, [tpoken])
+          const deleteRow = await runQuery(deleteActiveEmail, [token])
           if (deleteRow instanceof Error) throw new Error(deleteRow)
 
           if (error.message === 'jwt expired') return res.status(401).send('Link expired')
