@@ -3,7 +3,7 @@ import { AuthContext } from '../../context/authContext/AuthContext'
 
 const Home = () => {
   const authContext = useContext(AuthContext)
-  const { user, } = authContext
+  const { user } = authContext
   useEffect(() => {
     console.log("zamontowano");
   }, []);

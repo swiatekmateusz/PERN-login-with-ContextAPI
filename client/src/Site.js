@@ -12,10 +12,19 @@ import ResetPassword from './components/pages/ResetPassword'
 import Alerts from './components/layout/Alerts'
 import { withRouter } from 'react-router-dom';
 import { AlertContext } from './context/alertContext/AlertContext'
+import { ServiceContext } from './context/serviceContext/ServiceContext'
 
 const Site = props => {
+
   const authContext = useContext(AuthContext);
-  const { loadUser, endLoading, loading } = authContext
+  const { loadUser, endLoading, loading, error } = authContext
+
+  const alertContext = useContext(AlertContext);
+  const { clearAlerts, addAlert } = alertContext
+
+  const serviceContext = useContext(ServiceContext);
+  const { alert } = serviceContext
+
   useEffect(() => {
     if (localStorage.token) {
       loadUser()
@@ -25,8 +34,15 @@ const Site = props => {
     // eslint-disable-next-line
   }, []);
 
-  const alertContext = useContext(AlertContext);
-  const { clearAlerts } = alertContext
+  useEffect(() => {
+    if (error) {
+      addAlert(error, "danger")
+    }
+    if (alert) {
+      addAlert(alert, "danger")
+    }
+    // eslint-disable-next-line
+  }, [error, alert]);
 
   useEffect(() => {
     clearAlerts()

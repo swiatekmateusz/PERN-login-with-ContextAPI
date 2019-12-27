@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../context/authContext/AuthContext'
+import { ServiceContext } from '../../context/serviceContext/ServiceContext'
 import { AlertContext } from '../../context/alertContext/AlertContext'
 import axios from 'axios'
 
@@ -10,8 +10,8 @@ const ResetPassword = props => {
   })
   const [msg, setMsg] = useState('Loading...')
 
-  const authContext = useContext(AuthContext)
-  const { resetPassword, error, } = authContext
+  const serviceContext = useContext(ServiceContext);
+  const { resetPassword } = serviceContext
 
   const alertContext = useContext(AlertContext);
   const { addAlert, clearAlerts, isAuthenticated } = alertContext
@@ -36,14 +36,11 @@ const ResetPassword = props => {
   }, []);
 
   useEffect(() => {
-    if (error) {
-      addAlert(error, "danger")
-    }
     if (isAuthenticated) {
       props.history.push('/')
     }
     // eslint-disable-next-line
-  }, [props.history, isAuthenticated, error]);
+  }, [props.history, isAuthenticated]);
 
   const handleInput = e => setPasswords({
     ...passwords,

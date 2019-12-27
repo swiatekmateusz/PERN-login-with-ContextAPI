@@ -22,8 +22,8 @@ router.post('/', [
 
   try {
     // Check if user exists
-    const query1 = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
-    const user = await runQuery(query1, [email])
+    const queryIsUserExists = "SELECT id,emailconfirmed,password FROM users WHERE email = $1"
+    const user = await runQuery(queryIsUserExists, [email])
     if (user instanceof Error) throw new Error(user)
 
     if (user.length === 0) {
@@ -43,7 +43,6 @@ router.post('/', [
     if (!emailconfirmed) {
       return res.status(400).send("You have to confirm your email!")
     }
-
 
     // Send token
     const payload = {
@@ -70,8 +69,8 @@ router.get('/', auth, async (req, res) => {
   try {
     if (req.user) {
       // Get info about user included in token
-      const query = "SELECT email,name,date FROM users WHERE id = $1"
-      const user = await runQuery(query, [req.user.id])
+      const queryGetUser = "SELECT email,name,date FROM users WHERE id = $1"
+      const user = await runQuery(queryGetUser, [req.user.id])
       if (user instanceof Error) throw new Error(user)
 
       user.id = req.user.id

@@ -12,33 +12,36 @@ const { check, validationResult } = require('express-validator')
 router.put('/reset/', async (req, res) => {
   const { token, password } = req.body
   try {
+    const queryCheckLink = "SELECT * FROM links WHERE token=$1 AND typeoflink='resetpassword'"
+    const runCheckLink = await runQuery(queryCheckLink, [token])
+    if (runCheckLink instanceof Error) throw runCheckLink
+    if (runCheckLink.length === 0) {
+      return res.status(400).send("You have arleady reset password")
+    }
+
     jwt.verify(token, config.get('jwtSecrets.passwordSecret'), async (error, decoded) => {
-      // Check if errrs
       if (error !== null) {
-        // USUWANIE Z BAZY linku dajacego error
-        const deleteResetPassword = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
-        const deleteRow = await runQuery(deleteResetPassword, [token])
-        if (deleteRow instanceof Error) throw new Error(deleteRow)
+        const queryDeleteLink = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
+        const runDeleteLink = await runQuery(queryDeleteLink, [token])
+        if (runDeleteLink instanceof Error) throw new Error(runDeleteLink)
 
         if (error.message === 'jwt expired') return res.status(401).send('Link expired')
         if (error.message === 'invalid token' || error.message === 'jwt malformed') return res.status(401).send('Invalid link')
         else return res.status(400).send("Invalid token")
       }
-      // If no error
       if (decoded) {
-
-        //Hash password
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
         const { email } = decoded
+
         const queryUpdatePassword = "UPDATE users SET password = $1 WHERE email = $2"
         const runUpdatePassword = await runQuery(queryUpdatePassword, [hashPassword, email])
         if (runUpdatePassword instanceof Error) throw new Error(runUpdatePassword)
 
-        const deleteResetPassword = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
-        const deleteRow = await runQuery(deleteResetPassword, [token])
-        if (deleteRow instanceof Error) throw new Error(deleteRow)
+        const queryDeleteLink = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
+        const runDeleteLink = await runQuery(queryDeleteLink, [token])
+        if (runDeleteLink instanceof Error) throw new Error(runDeleteLink)
 
         res.send("Password updated")
       }
@@ -50,34 +53,33 @@ router.put('/reset/', async (req, res) => {
 })
 
 // @route GET api/password
-// @desc  Check reset token
+// @desc  Check correction ofreset token
 // @access Public
 router.get('/check/:token', async (req, res) => {
   const { token } = req.params
   try {
     jwt.verify(token, config.get('jwtSecrets.passwordSecret'), async (error, decoded) => {
-      // Check if errrs
       if (error !== null) {
-        // USUWANIE Z BAZY linku dajacego error
-        const deleteResetPassword = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
-        const deleteRow = await runQuery(deleteResetPassword, [token])
-        if (deleteRow instanceof Error) throw new Error(deleteRow)
+        const queryDeleteLink = "DELETE FROM links WHERE token = $1 AND typeoflink = 'resetpassword'"
+        const runDeleteLink = await runQuery(queryDeleteLink, [token])
+        if (runDeleteLink instanceof Error) throw new Error(runDeleteLink)
 
         if (error.message === 'jwt expired') return res.status(401).send('Link expired')
         if (error.message === 'invalid token' || error.message === 'jwt malformed') return res.status(401).send('Invalid link')
         else return res.status(400).send("Invalid token")
       }
-      // If no error
       if (decoded) {
         const { email } = decoded
+
         const queryCheckUser = "SELECT id FROM users WHERE email = $1"
         const runCheckUser = await runQuery(queryCheckUser, [email])
         if (runCheckUser instanceof Error) throw new Error(runCheckUser)
-        const queryToken = "SELECT email FROM links WHERE token = $1"
-        const runToken = await runQuery(queryToken, [token])
-        if (runToken instanceof Error) throw new Error(runToken)
 
-        if (runCheckUser.id && runToken.email === email) {
+        const queryGetEmail = "SELECT email FROM links WHERE token = $1"
+        const runGetEmail = await runQuery(queryGetEmail, [token])
+        if (runGetEmail instanceof Error) throw new Error(runGetEmail)
+
+        if (runCheckUser.id && runGetEmail.email === email) {
           res.send("Good token")
         } else {
           res.status(400).send("Error")

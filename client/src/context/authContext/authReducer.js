@@ -51,15 +51,17 @@ export default (state, action) => {
         ...state,
         error: null,
       }
-    case "SET_RESENDEMAIL":
+    case "REGISTERING_START":
+    case "LOGIN_START":
       return {
         ...state,
-        emailToResend: action.payload,
+        action: true,
       }
-    case "REMOVE_RESENDEMAIL":
+    case "REGISTERING_END":
+    case "LOGIN_END":
       return {
         ...state,
-        emailToResend: null,
+        action: false,
       }
     default:
       return {

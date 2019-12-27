@@ -24,11 +24,11 @@ router.post('/', [
 
   // Check if email is used
   const queryIsEmailUsed = "SELECT * FROM users WHERE email = $1"
-  const user = await runQuery(queryIsEmailUsed, [email])
-  if (user instanceof Error) throw new Error(user)
+  const runIsEmailUsed = await runQuery(queryIsEmailUsed, [email])
+  if (runIsEmailUsed instanceof Error) throw new Error(runIsEmailUsed)
 
-  if (user.length !== 0 || user.id) {
-    return res.status(400).json({ msg: "User exists" })
+  if (runIsEmailUsed.length !== 0 || runIsEmailUsed.id) {
+    return res.status(400).send("User exists")
   }
 
   //Hash password
@@ -38,14 +38,12 @@ router.post('/', [
   //Create email token
   const emailToken = jwt.sign({ email }, config.get('jwtSecrets.emailSecret'), { expiresIn: '1h' })
 
-  // Robimy link i dodajemy do tabeli z : token,id usera, rodzaj linku(resetPasswd,activeMail)
-
   // Insert new user
   const date = Math.floor(Date.now() / 1000)
   try {
     const queryInsertUser = "INSERT INTO users (name,email,password,date) VALUES ($1,$2,$3,to_timestamp($4))"
-    const addUser = await runQuery(queryInsertUser, [name, email, hashPassword, date])
-    if (addUser instanceof Error) throw new Error(addUser)
+    const runInsertUser = await runQuery(queryInsertUser, [name, email, hashPassword, date])
+    if (runInsertUser instanceof Error) throw new Error(runInsertUser)
 
     await transporter.sendMail({
       to: email,
@@ -54,8 +52,8 @@ router.post('/', [
     })
 
     const queryInsertLink = `INSERT INTO links (email,token,typeoflink) VALUES ($1,$2,$3)`
-    const addLink = await runQuery(queryInsertLink, [email, emailToken, "activeemail"])
-    if (addLink instanceof Error) throw new Error(addLink)
+    const runInsertLink = await runQuery(queryInsertLink, [email, emailToken, "activeemail"])
+    if (runInsertLink instanceof Error) throw new Error(runInsertLink)
 
     res.send("Success register")
   } catch (err) {

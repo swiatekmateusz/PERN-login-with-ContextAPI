@@ -10,8 +10,8 @@ const transporter = require('../config/mail')
 router.get('/resend/:email', async (req, res) => {
   const email = req.params.email
   try {
-    const getUserWithEmail = "SELECT emailconfirmed FROM users WHERE email=$1"
-    const userConfirm = await runQuery(getUserWithEmail, [email])
+    const queryCheckEmailConfirmation = "SELECT emailconfirmed FROM users WHERE email=$1"
+    const userConfirm = await runQuery(queryCheckEmailConfirmation, [email])
     if (userConfirm instanceof Error) throw new Error(userConfirm)
 
     if (userConfirm.emailconfirmed === undefined) {
@@ -19,14 +19,14 @@ router.get('/resend/:email', async (req, res) => {
     } else if (userConfirm.emailconfirmed) {
       res.send("This email have been arleady confirm")
     } else {
-      const deleteOldLink = "DELETE FROM links WHERE email=$1"
-      const deleteLink = await runQuery(deleteOldLink, [email])
-      if (deleteLink instanceof Error) throw new Error(deleteLink)
+      const queryDeleteOldLink = "DELETE FROM links WHERE email=$1"
+      const runDeleteLink = await runQuery(queryDeleteOldLink, [email])
+      if (runDeleteLink instanceof Error) throw new Error(runDeleteLink)
 
       const token = jwt.sign({ email }, config.get('jwtSecrets.emailSecret'), { expiresIn: '1h' })
-      const insertNewLink = "INSERT INTO links (email,token,typeoflink) VALUES ($1,$2,'activeemail')"
-      const insertLink = await runQuery(insertNewLink, [email, token])
-      if (insertLink instanceof Error) throw new Error(insertLink)
+      const queryInsertNewLink = "INSERT INTO links (email,token,typeoflink) VALUES ($1,$2,'activeemail')"
+      const runInsertLink = await runQuery(queryInsertNewLink, [email, token])
+      if (runInsertLink instanceof Error) throw new Error(runInsertLink)
 
       transporter.sendMail({
         to: email,

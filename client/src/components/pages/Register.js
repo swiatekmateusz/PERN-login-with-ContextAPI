@@ -12,20 +12,17 @@ const Register = props => {
   const { name, email, password, password2 } = user
 
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, registerUser, error } = authContext
+  const { isAuthenticated, registerUser, action } = authContext
 
   const alertContext = useContext(AlertContext);
   const { addAlert, clearAlerts } = alertContext
 
   useEffect(() => {
-    if (error) {
-      addAlert(error, "danger")
-    }
     if (isAuthenticated) {
       props.history.push('/')
     }
     // eslint-disable-next-line
-  }, [props.history, isAuthenticated, error]);
+  }, [props.history, isAuthenticated]);
 
   const handleInput = e => setUser({
     ...user,
@@ -49,15 +46,18 @@ const Register = props => {
   }
 
   return (
-    <Fragment>
-      <h1>Register</h1>
+    <Fragment>{!action ? (
+
       <form onSubmit={handleSubmit}>
+        <h1>Register</h1>
         <div><label>Name</label><input type="text" name="name" value={name} onChange={handleInput} required /></div>
         <div><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
         <div><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
         <div><label>Retype password</label><input type="password" name="password2" value={password2} onChange={handleInput} required /></div>
         <input type="submit" />
       </form>
+    ) : "Loading"}
+
     </Fragment>
   )
 }
