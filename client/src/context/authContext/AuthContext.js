@@ -59,8 +59,18 @@ export const AuthState = props => {
       } else {
         dispatch({ type: "REMOVE_RESENDEMAIL" })
       }
-      dispatch({ type: "ERROR_LOGIN", payload: error.response.data })
-      dispatch({ type: "CLEAR_ERROR" })
+      console.log(error.response);
+      if (error.response.data === "You have to confirm your email!" ||
+        error.response.data === "User with that email doesn't exist" ||
+        error.response.data === "Invalid password") {
+        dispatch({ type: "ERROR_LOGIN", payload: error.response.data })
+        dispatch({ type: "CLEAR_ERROR" })
+      } else if (error.response.data.errors.length > 0) {
+        error.response.data.errors.forEach(error => {
+          dispatch({ type: "ERROR_REGISTER", payload: error.msg })
+          dispatch({ type: "CLEAR_ERROR" })
+        })
+      }
       dispatch({ type: "LOGIN_END" })
     }
   }

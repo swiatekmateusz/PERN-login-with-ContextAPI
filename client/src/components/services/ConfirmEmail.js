@@ -23,7 +23,7 @@ const ConfirmEmail = props => {
     // eslint-disable-next-line
   }, []);
   return (
-    <div>{msg}</div>
+    <div><h2>{msg}</h2></div>
   );
 }
 

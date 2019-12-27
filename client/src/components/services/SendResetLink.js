@@ -32,11 +32,13 @@ const SendResetLink = props => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Type your email to send reset password link</h3>
-      <div><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
-      <input type="submit" />
-    </form>
+    <div className="auth">
+      <form onSubmit={handleSubmit}>
+        <h2>Type your email to send reset password link</h2>
+        <div className="field"><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
+        <input type="submit" />
+      </form>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/authContext/AuthContext'
 import { AlertContext } from '../../context/alertContext/AlertContext'
 
@@ -46,19 +46,19 @@ const Register = props => {
   }
 
   return (
-    <Fragment>{!action ? (
+    <div className="auth">{!action ? (
 
       <form onSubmit={handleSubmit}>
         <h1>Register</h1>
-        <div><label>Name</label><input type="text" name="name" value={name} onChange={handleInput} required /></div>
-        <div><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
-        <div><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
-        <div><label>Retype password</label><input type="password" name="password2" value={password2} onChange={handleInput} required /></div>
-        <input type="submit" />
+        <div className="field"><label>Name</label><input type="text" name="name" value={name} onChange={handleInput} required /></div>
+        <div className="field"><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
+        <div className="field"><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
+        <div className="field"><label>Retype password</label><input type="password" name="password2" value={password2} onChange={handleInput} required /></div>
+        <input type="submit" value="Submit!" />
       </form>
-    ) : "Loading"}
+    ) : "Loading..."}
 
-    </Fragment>
+    </div>
   )
 }
 

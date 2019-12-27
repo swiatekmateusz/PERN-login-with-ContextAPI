@@ -9,7 +9,7 @@ const Alerts = () => {
   return (
     <Fragment>
       {alerts.map(alert =>
-        <div className={alert.type} key={alert.id}>
+        <div className={`alert ${alert.type}`} key={alert.id}>
           <p>{alert.content}</p>
           <button onClick={() => deleteAlert(alert.id)}>X</button>
         </div>

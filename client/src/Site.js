@@ -39,7 +39,7 @@ const Site = props => {
       addAlert(error, "danger")
     }
     if (alert) {
-      addAlert(alert, "danger")
+      addAlert(alert, "success")
     }
     // eslint-disable-next-line
   }, [error, alert]);
@@ -51,22 +51,23 @@ const Site = props => {
 
   return (
     <Fragment>
+
+
+      <Nav />
       {!loading ? (
-        <Fragment>
-          <Nav />
-          <div className="container">
-            <Alerts />
-            <Switch>
-              <PrivateRoute exact path="/" component={Home} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/confirm/:token" component={ConfirmEmail} />
-              <Route exact path="/reset" component={SendResetLink} />
-              <Route exact path="/reset/:token" component={ResetPassword} />
-            </Switch>
-          </div>
-        </Fragment>
-      ) : 'Loading...'}
+        <div className="container">
+          <Alerts />
+          <Switch>
+            <PrivateRoute exact path="/" component={Home} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/confirm/:token" component={ConfirmEmail} />
+            <Route exact path="/reset" component={SendResetLink} />
+            <Route exact path="/reset/:token" component={ResetPassword} />
+          </Switch>
+        </div>) : 'Loading...'}
+
+
     </Fragment>
   )
 }

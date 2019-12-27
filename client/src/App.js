@@ -4,6 +4,7 @@ import { AuthState } from './context/authContext/AuthContext'
 import { AlertState } from './context/alertContext/AlertContext'
 import { ServiceState } from './context/serviceContext/ServiceContext'
 import Site from './Site'
+import './sass/main.scss'
 
 const App = () => {
   return (

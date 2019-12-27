@@ -63,10 +63,11 @@ const ResetPassword = props => {
 
   }
   return (
-    <div>
+    <div className="auth">
       {!msg ? (<form onSubmit={handleSubmit}>
-        <div><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required minLength="6" /></div>
-        <div><label>Retype password</label><input type="password" name="password2" value={password2} onChange={handleInput} required minLength="6" /></div>
+        <h2>Reset password</h2>
+        <div className="field"><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required minLength="6" /></div>
+        <div className="field"><label>Retype password</label><input type="password" name="password2" value={password2} onChange={handleInput} required minLength="6" /></div>
         <input type="submit" />
       </form>) : msg}
     </div>

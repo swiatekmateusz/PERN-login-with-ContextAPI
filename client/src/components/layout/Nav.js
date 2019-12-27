@@ -5,29 +5,31 @@ import { AuthContext } from '../../context/authContext/AuthContext'
 const Nav = () => {
   const authContext = useContext(AuthContext)
   const { isAuthenticated, logout } = authContext
+
+
   const navLinksGuest = (
-    <nav>
-      <ul>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-      </ul>
-    </nav>
+    <ul>
+      <li>
+        <Link to="/login">Login</Link>
+      </li>
+      <li>
+        <Link to="/register">Register</Link>
+      </li>
+    </ul>
   )
   const navLinkUser = (
-    <nav>
-      <ul>
-        <li>
-          <a onClick={() => logout()} href="#!">Logout</a>
-        </li>
-      </ul>
-    </nav>
+    <ul>
+      <li>
+        <a onClick={() => logout()} href="#!">Logout</a>
+      </li>
+    </ul>
   )
 
-  return isAuthenticated ? navLinkUser : navLinksGuest
+  return (
+    <nav className="main_nav">
+      {isAuthenticated ? navLinkUser : navLinksGuest}
+    </nav>
+  )
 };
 
 export default Nav
