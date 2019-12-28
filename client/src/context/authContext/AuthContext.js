@@ -2,7 +2,6 @@ import React, { createContext, useReducer } from 'react';
 import authReducer from './authReducer';
 import axios from 'axios';
 import setAuthToken from '../../utils/setAuthToken';
-import { Redirect } from 'react-router-dom';
 
 export const AuthContext = createContext()
 
@@ -27,8 +26,9 @@ export const AuthState = props => {
       delete user.password2
       // eslint-disable-next-line
       const res = await axios.post('/api/users', user, config)
+      dispatch({ type: "ALERT", payload: "Success, now confirm your email" })
+      dispatch({ type: "CLEAR_ALERT" })
       dispatch({ type: "REGISTERING_END" })
-      props.history.push('/login')
     } catch (error) {
       if (error.response.data === "User exists") {
         dispatch({ type: "ERROR_REGISTER", payload: error.response.data })

@@ -48,7 +48,7 @@ router.post('/', [
     await transporter.sendMail({
       to: email,
       subject: 'Confirm email',
-      html: `http://localhost:3000/confirm/${emailToken}`
+      html: `${process.env.NODE_ENV === 'production' ? process.env.URL : 'http://localhost:3000'}/confirm/${emailToken}`
     })
 
     const queryInsertLink = `INSERT INTO links (email,token,typeoflink) VALUES ($1,$2,$3)`

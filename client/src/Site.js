@@ -36,7 +36,7 @@ const Site = props => {
 
   useEffect(() => {
     if (error) {
-      addAlert(error, "danger")
+      addAlert(error, error === "Success, now confirm your email" ? "success" : "danger")
     }
     if (alert) {
       addAlert(alert, "success")

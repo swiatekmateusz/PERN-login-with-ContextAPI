@@ -17,7 +17,7 @@ router.get('/resend/:email', async (req, res) => {
     if (userConfirm.emailconfirmed === undefined) {
       res.send("There is no user with that email")
     } else if (userConfirm.emailconfirmed) {
-      res.send("This email have been arleady confirm")
+      res.send("This email have been arleady confirmed")
     } else {
       const queryDeleteOldLink = "DELETE FROM links WHERE email=$1"
       const runDeleteLink = await runQuery(queryDeleteOldLink, [email])
