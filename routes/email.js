@@ -31,7 +31,7 @@ router.get('/resend/:email', async (req, res) => {
       transporter.sendMail({
         to: email,
         subject: 'Resended: Confirm email',
-        html: `http://localhost:3000/confirm/${token}`
+        html: `${process.env.NODE_ENV === 'production' ? process.env.URL : 'http://localhost:3000'}/confirm/${token}`
       })
       res.send("Link resend")
     }

@@ -129,7 +129,7 @@ router.post('/reset', [
     transporter.sendMail({
       to: email,
       subject: 'Reset password link',
-      html: `http://localhost:3000/reset/${token}`
+      html: `${process.env.NODE_ENV === 'production' ? process.env.URL : 'http://localhost:3000'}/reset/${token}`
     })
     // jezeli tak usuwamy, genereujemy i wysylamy nowy i dodajemy
     // jezeli nie generujemy wysylamy dodajemy
