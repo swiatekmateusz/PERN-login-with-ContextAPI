@@ -59,7 +59,6 @@ export const AuthState = props => {
       } else {
         dispatch({ type: "REMOVE_RESENDEMAIL" })
       }
-      console.log(error.response);
       if (error.response.data === "You have to confirm your email!" ||
         error.response.data === "User with that email doesn't exist" ||
         error.response.data === "Invalid password") {

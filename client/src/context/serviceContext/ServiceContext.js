@@ -7,29 +7,20 @@ export const ServiceContext = createContext()
 export const ServiceState = props => {
   const initialState = {
     alert: null,
-    emailToResend: null,
   }
 
   const [state, dispatch] = useReducer(serviceReducer, initialState)
 
-  const resendEmail = async () => {
+  const resendEmail = async email => {
     try {
       // uderzenie do API i alert ze pomyslnie resend email, a nasepnie clear przycisku
-      const get = await axios.get(`/api/email/resend/${state.emailToResend}`)
+      const get = await axios.get(`/api/email/resend/${email}`)
       dispatch({ type: "ALERT", payload: get.data })
       dispatch({ type: "CLEAR_ALERT" })
     } catch (error) {
       dispatch({ type: "ALERT", payload: error.response.data })
       dispatch({ type: "CLEAR_ALERT" })
     }
-  }
-
-  const setResendEmail = email => {
-    dispatch({ type: "SET_RESENDEMAIL", payload: email })
-  }
-
-  const clearResendEmail = () => {
-    dispatch({ type: "REMOVE_RESENDEMAIL" })
   }
 
   const resetPasswordLink = async email => {
@@ -72,12 +63,9 @@ export const ServiceState = props => {
   return (
     <ServiceContext.Provider value={{
       alert: state.alert,
-      emailToResend: state.emailToResend,
       resendEmail,
-      clearResendEmail,
       resetPasswordLink,
       resetPassword,
-      setResendEmail
     }}>
       {props.children}
     </ServiceContext.Provider>

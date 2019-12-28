@@ -10,16 +10,6 @@ export default (state, action) => {
         ...state,
         alert: null,
       }
-    case "SET_RESENDEMAIL":
-      return {
-        ...state,
-        emailToResend: action.payload,
-      }
-    case "REMOVE_RESENDEMAIL":
-      return {
-        ...state,
-        emailToResend: null,
-      }
     default:
       return {
         ...state

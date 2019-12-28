@@ -9,6 +9,7 @@ const Login = props => {
     email: '',
     password: ''
   })
+  const [emailCopy, setEmail] = useState(null)
   const { email, password } = user
 
   const authContext = useContext(AuthContext);
@@ -18,22 +19,20 @@ const Login = props => {
   const { clearAlerts } = alertContext
 
   const serviceContext = useContext(ServiceContext);
-  const { clearResendEmail, emailToResend, resendEmail, setResendEmail } = serviceContext
+  const { resendEmail } = serviceContext
 
   useEffect(() => {
     if (error === "You have to confirm your email!") {
-      setResendEmail(email)
-    } else {
-      clearResendEmail()
+      setEmail(emailCopy)
     }
     if (isAuthenticated) {
       props.history.push('/')
     }
     // eslint-disable-next-line
-  }, [props.history, isAuthenticated]);
+  }, [props.history, isAuthenticated, error]);
 
   useEffect(() => {
-    clearResendEmail()
+    setEmail(null)
     // eslint-disable-next-line
   }, [props.history]);
 
@@ -45,6 +44,7 @@ const Login = props => {
   const handleSubmit = e => {
     e.preventDefault()
     clearAlerts()
+    setEmail(email)
     loginUser(user)
     setUser({
       email: '',
@@ -53,8 +53,9 @@ const Login = props => {
   }
 
   const resend = () => {
-    resendEmail()
-    clearResendEmail()
+    clearAlerts()
+    resendEmail(emailCopy)
+    setEmail(null)
   }
 
   return (
@@ -65,7 +66,7 @@ const Login = props => {
           <div className="field"><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
           <div className="field"><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
           <input type="submit" value="Log in" />
-          {emailToResend !== null ? <button onClick={resend}>Resend email</button> : null}
+          {emailCopy !== null ? <button onClick={resend}>Resend email</button> : null}
           <Link to="/reset">Did you forget password?</Link>
         </form>
       ) : "Loading..."}

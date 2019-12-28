@@ -17,7 +17,7 @@
         align-self: flex-end;
       }
     }
-    input[type=submit]{
+    input[type=submit],button{
       background: white;
         border: 2px solid black;
         font-size: 1.1rem;
@@ -29,6 +29,9 @@
           background-color: black; 
           color: white
         }
+    }
+    button{
+      margin-left: 1rem;
     }
     a{
       display: block;
