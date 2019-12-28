@@ -24,6 +24,10 @@ export const ServiceState = props => {
     }
   }
 
+  const setResendEmail = email => {
+    dispatch({ type: "SET_RESENDEMAIL", payload: email })
+  }
+
   const clearResendEmail = () => {
     dispatch({ type: "REMOVE_RESENDEMAIL" })
   }
@@ -72,7 +76,8 @@ export const ServiceState = props => {
       resendEmail,
       clearResendEmail,
       resetPasswordLink,
-      resetPassword
+      resetPassword,
+      setResendEmail
     }}>
       {props.children}
     </ServiceContext.Provider>

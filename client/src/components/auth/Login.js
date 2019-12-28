@@ -12,15 +12,20 @@ const Login = props => {
   const { email, password } = user
 
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loginUser, action } = authContext
+  const { isAuthenticated, loginUser, action, error } = authContext
 
   const alertContext = useContext(AlertContext);
   const { clearAlerts } = alertContext
 
   const serviceContext = useContext(ServiceContext);
-  const { clearResendEmail, emailToResend, resendEmail } = serviceContext
+  const { clearResendEmail, emailToResend, resendEmail, setResendEmail } = serviceContext
 
   useEffect(() => {
+    if (error === "You have to confirm your email!") {
+      setResendEmail(email)
+    } else {
+      clearResendEmail()
+    }
     if (isAuthenticated) {
       props.history.push('/')
     }
