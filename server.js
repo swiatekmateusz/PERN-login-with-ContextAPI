@@ -14,9 +14,10 @@ app.use('/api/password', require('./routes/password'))
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))
-  console.log(process.env.URL);
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    console.log(process.env.URL);
+    console.log(process.env);
   })
 }
 
