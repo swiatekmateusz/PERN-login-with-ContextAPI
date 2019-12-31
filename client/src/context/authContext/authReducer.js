@@ -63,6 +63,16 @@ export default (state, action) => {
         ...state,
         action: false,
       }
+    case "SET_RESENDEMAIL":
+      return {
+        ...state,
+        emailToResend: action.payload
+      }
+    case "REMOVE_RESENDEMAIL":
+      return {
+        ...state,
+        emailToResend: null
+      }
     default:
       return {
         ...state

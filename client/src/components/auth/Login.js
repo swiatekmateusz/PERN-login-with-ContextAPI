@@ -9,11 +9,10 @@ const Login = props => {
     email: '',
     password: ''
   })
-  const [emailCopy, setEmail] = useState(null)
   const { email, password } = user
 
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loginUser, action, error } = authContext
+  const { isAuthenticated, loginUser, action, clearResendEmail, emailToResend } = authContext
 
   const alertContext = useContext(AlertContext);
   const { clearAlerts } = alertContext
@@ -22,21 +21,13 @@ const Login = props => {
   const { resendEmail } = serviceContext
 
   useEffect(() => {
-    if (error === "You have to confirm your email!") {
-      setEmail(emailCopy)
-    } else {
-      setEmail(null)
-    }
     if (isAuthenticated) {
       props.history.push('/')
     }
+    clearResendEmail()
     // eslint-disable-next-line
-  }, [props.history, isAuthenticated, error]);
+  }, [props.history, isAuthenticated]);
 
-  useEffect(() => {
-    setEmail(null)
-    // eslint-disable-next-line
-  }, [props.history]);
 
   const handleInput = e => setUser({
     ...user,
@@ -46,7 +37,6 @@ const Login = props => {
   const handleSubmit = e => {
     e.preventDefault()
     clearAlerts()
-    setEmail(email)
     loginUser(user)
     setUser({
       email: '',
@@ -56,8 +46,8 @@ const Login = props => {
 
   const resend = () => {
     clearAlerts()
-    resendEmail(emailCopy)
-    setEmail(null)
+    resendEmail(emailToResend)
+    clearResendEmail()
   }
 
   return (
@@ -68,7 +58,7 @@ const Login = props => {
           <div className="field"><label>Email</label><input type="email" name="email" value={email} onChange={handleInput} required /></div>
           <div className="field"><label>Password</label><input type="password" name="password" value={password} onChange={handleInput} required /></div>
           <input type="submit" value="Log in" />
-          {emailCopy !== null ? <button onClick={resend}>Resend email</button> : null}
+          {emailToResend !== null ? <button onClick={resend}>Resend email</button> : null}
           <Link to="/reset">Did you forget password?</Link>
         </form>
       ) : "Loading..."}

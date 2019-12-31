@@ -13,6 +13,7 @@ export const AuthState = props => {
     error: null,
     loading: true,
     action: false,
+    emailToResend: null
   }
 
   const [state, dispatch] = useReducer(authReducer, initialState)
@@ -96,6 +97,9 @@ export const AuthState = props => {
     dispatch({ type: "END_LOADING" })
   }
 
+  const clearResendEmail = () => {
+    dispatch({ type: "REMOVE_RESENDEMAIL" })
+  }
 
   return (
     <AuthContext.Provider value={{
@@ -105,11 +109,13 @@ export const AuthState = props => {
       error: state.error,
       loading: state.loading,
       action: state.action,
+      emailToResend: state.emailToResend,
       registerUser,
       loginUser,
       loadUser,
       logout,
-      endLoading
+      endLoading,
+      clearResendEmail
     }}>
       {props.children}
     </AuthContext.Provider>
