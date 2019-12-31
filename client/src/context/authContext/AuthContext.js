@@ -84,7 +84,7 @@ export const AuthState = props => {
       const response = await axios.get('/api/auth')
       dispatch({ type: "SUCCESS_LOADUSER", payload: response.data })
     } catch (error) {
-      dispatch({ type: "ERROR_LOADUSER", payload: error.response.data })
+      dispatch({ type: "ERROR_LOADUSER", payload: "Unautorized" })
       dispatch({ type: "CLEAR_ERROR" })
     }
   }

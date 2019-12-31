@@ -8,7 +8,7 @@ module.exports = auth = (req, res, next) => {
     return res.status(401).json({ msg: "No token, unautorized" })
   }
   const jwtVerify = jwt.verify(token, config.get('jwtSecrets.jwtSecret'), (err, decoded) => {
-    if (err) res.status(401).json({ msg: 'Token is not valid' })
+    if (err) res.status(401).send('Token is not valid')
     if (decoded) req.user = decoded.user
     next()
   })

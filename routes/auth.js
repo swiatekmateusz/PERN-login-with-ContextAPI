@@ -64,7 +64,7 @@ router.post('/', [
 
 // @route GET  api/auth
 // @desc  Get all user info
-// @access Public
+// @access Private
 router.get('/', auth, async (req, res) => {
   try {
     if (req.user) {
