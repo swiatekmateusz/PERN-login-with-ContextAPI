@@ -24,6 +24,8 @@ const Login = props => {
   useEffect(() => {
     if (error === "You have to confirm your email!") {
       setEmail(emailCopy)
+    } else {
+      setEmail(null)
     }
     if (isAuthenticated) {
       props.history.push('/')
